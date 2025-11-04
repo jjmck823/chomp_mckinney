@@ -3,6 +3,7 @@ import pygame
 from random import randint
 from game_params import *
 from game_background import *
+from player import Player 
 
 # pygame setup
 pygame.init()
@@ -15,7 +16,10 @@ running = True
 #make a background 
 background = make_background()
 
-screen.blit(background, (0,0))
+#make player 
+player = Player()
+
+
 
 while running:
     # poll for events
@@ -23,10 +27,17 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        #player event and update
+        player.check_event(event) 
+    player.update()
+   
+   
     # RENDER YOUR GAME HERE
 
     # flip() the display to put your work on screen
+    screen.blit(background, (0,0))
+    player.draw(screen)
+    
     pygame.display.flip()
 
     clock.tick(60)  # limits FPS to 60

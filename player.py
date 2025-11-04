@@ -22,20 +22,18 @@ class Player(pygame.sprite.Sprite):
     def check_event(self, event):
         # check key event 
         if event.type == pygame.KEYDOWN:
-            # check and see if it was W key
             if event.key == pygame.K_w:
-                self.vy += -2
+                self.vy += -0.5
                 # player goes up
-            # check and see if it was a S key
             if event.key == pygame.K_s:
                 # player goes down
-                self.vy  += 2
+                self.vy  += 0.5
             if event.key == pygame.K_d:
                 #player goes right 
-                self.vx += 2
+                self.vx += 0.5
             if event.key == pygame.K_a:
                 #player goes right 
-                self.vx += -2
+                self.vx += -0.5
             
     
     def draw(self, screen):
