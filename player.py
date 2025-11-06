@@ -2,7 +2,7 @@ import pygame
 from game_params import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x=WIDTH*0.1, y=HEIGHT/2):
+    def __init__(self, x=WIDTH/2, y=HEIGHT/2):
         pygame.sprite.Sprite.__init__(self) # init the sprite class
         self.x = x
         self.y = y

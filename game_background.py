@@ -28,7 +28,7 @@ def make_background():
 
     #place random shrubs\
 
-    num_shrubs = 15    
+    num_shrubs = 20    
     for i in range(num_shrubs):
         x = randint(0,WIDTH)
         y = randint(0,HEIGHT)
@@ -36,7 +36,7 @@ def make_background():
         background.blit(shrubs,(x,y))
     #blit single shrubs 
 
-    num_shrubs_single = 10    
+    num_shrubs_single = 15    
     for i in range(num_shrubs_single):
         x = randint(0,WIDTH)
         y = randint(0,HEIGHT)

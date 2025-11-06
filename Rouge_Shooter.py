@@ -4,6 +4,7 @@ from random import randint
 from game_params import *
 from game_background import *
 from player import Player 
+from text import Zombie_Text
 
 # pygame setup
 pygame.init()
@@ -18,7 +19,8 @@ background = make_background()
 
 #make player 
 player = Player()
-
+#make title 
+title = Zombie_Text()
 
 
 while running:
@@ -31,13 +33,19 @@ while running:
         player.check_event(event) 
     player.update()
    
-   
+
+
     # RENDER YOUR GAME HERE
 
     # flip() the display to put your work on screen
     screen.blit(background, (0,0))
     player.draw(screen)
     
+     #draw title and score 
+    title.update()
+    #title.update_score(player.score)
+    title.draw(screen)
+
     pygame.display.flip()
 
     clock.tick(60)  # limits FPS to 60
