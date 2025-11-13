@@ -4,18 +4,17 @@ from game_params import *
 class Zombie_Text():
     def __init__(self):
         # load up a font
-        self.title_font = pygame.font.Font('assests/Fonts/dangernight-font/Dangernight-vnZ5y.otf', 150)
+        self.title_font = pygame.font.Font('assests/Fonts/pickyside-font/PickysideRegular-vn7w4.otf', 150)
 
         self.black = (0, 0, 0)
-        self.title_surface = self.title_font.render('Survive', 1, self.black)
+        self.title_surface = self.title_font.render('SURVIVE', 1, self.black)
         self.title_rect = self.title_surface.get_rect()
-        self.title_rect.center = (WIDTH//2, HEIGHT//2)
+        self.title_rect.center = (WIDTH//2, HEIGHT*0.3)
         self.birth_time = pygame.time.get_ticks()
         self.death_time = 2000
 
         # make a score font / surface
-        self.score_font = pygame.font.Font('assests/Fonts/dangernight-font/Dangernight-vnZ5y.otf', 80)
-        self.black = (0,0,0)
+        self.score_font = pygame.font.Font('assests/Fonts/pickyside-font/PickysideRegular-vn7w4.otf', 60)
         self.score_surface = self.score_font.render('0',1,self.black)
 
     def update_score(self, score):
