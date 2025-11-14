@@ -55,7 +55,7 @@ while running:
 
     #draw title and score 
     title.update()
-    title.update_score(player.score)
+    title.update_score(player.score, screen)
     title.draw(screen)
 
     pygame.display.flip()

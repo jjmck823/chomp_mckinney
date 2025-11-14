@@ -26,11 +26,11 @@ class Player(pygame.sprite.Sprite):
         # check and see if a collision occured
         if colliding_enemy:
             self.score +=10
-            print(self.score)
-            # move the collided fish to the right of the screen
+            # move the collided enemy to the right of the screen
             for f in colliding_enemy:
                 f.x = randint(WIDTH, WIDTH+200)
                 f.y = randint(0,HEIGHT)
+                
 
     def check_event(self, event):
         # check key event 

@@ -1,6 +1,6 @@
 from game_params import *
 import pygame
-from random import choice
+from random import choice, randint
 
 class Enemy():
     def __init__(self,x=WIDTH+100,y=HEIGHT//2):
