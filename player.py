@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.vx = 0
         self.vy = 0
         self.image = pygame.image.load('assests/rougelike_shooter_pack/PNG/Enemies/Tiles/tile_0012.png')
-        # make player sprite and changr size 
+        # make player sprite and change size 
         self.image = pygame.transform.rotozoom(self.image, 0, 1)
         self.rect = self.image.get_rect()
         self.score=0

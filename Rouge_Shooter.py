@@ -1,4 +1,3 @@
-# Example file showing a basic pygame "game loop"
 import pygame
 from random import randint
 from game_params import *
@@ -22,7 +21,7 @@ background = make_background()
 #make enemies 
 enemy_list = []
 for i in range(20):
-    # make a new fish and append
+    # make a new enemy and append
     enemy_list.append(Enemy(randint(WIDTH,WIDTH+200), randint(0,HEIGHT)))
 
 player = Player(enemy_list)

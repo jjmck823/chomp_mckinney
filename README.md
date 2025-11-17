@@ -6,3 +6,8 @@
 - Dont get hit!
 
 
+## Game Screenshots
+
+![screenshot](documents\ss_1.png)
+
+![screenshot](documents\ss_2.png)
