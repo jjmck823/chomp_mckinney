@@ -48,13 +48,9 @@ class Player(pygame.sprite.Sprite):
                 #player goes right 
                 self.vx += -0.5
 
-        
-            
     
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-    
-
     
 
 
