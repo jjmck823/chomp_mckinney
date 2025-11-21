@@ -24,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.game_over_rect = self.game_over.get_rect()
         self.game_over_rect.center = (WIDTH//2, HEIGHT*0.3)
         self.image = pygame.image.load('assests/rougelike_shooter_pack/PNG/Enemies/Tiles/tile_0012.png')
+        self.shoot_sound = pygame.mixer.Sound('assests/rougelike_shooter_pack/Sounds/shoot-d.ogg')
+        self.death_sound = pygame.mixer.Sound('assests/rougelike_shooter_pack/Sounds/lose-a.ogg')
         # make player sprite and change size 
         self.image = pygame.transform.rotozoom(self.image, 0, 1)
         self.rect = self.image.get_rect()
@@ -53,7 +55,8 @@ class Player(pygame.sprite.Sprite):
         colliding_kill = pygame.sprite.spritecollide(self,self.enemy_group,0)
         if colliding_kill:
             self.live = False
-            print('you got hit') 
+            self.death_sound.play()
+    
        
             
     
@@ -61,7 +64,8 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         #create new bullet 
         closest_enemy = min(self.enemy_group, key=lambda e: math.hypot(e.x - self.x, e.y - self.y))
-        new_bullet = Bullet(self.rect.center, closest_enemy, self)
+        self.shoot_sound.play()
+        new_bullet = Bullet(self.rect.center, closest_enemy, self, self.enemy_group)
         self.bullet_group.add(new_bullet)
                 
 
@@ -78,13 +82,14 @@ class Player(pygame.sprite.Sprite):
             b.draw(screen)
     
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, coords, enemy, player):
+    def __init__(self, coords, enemy, player, enemy_group):
         super().__init__()
         self.x= coords[0]
         self.y=coords[1]
         self.speed = 5
         self.score = 0
         self.enemy = enemy
+        self.enemy_group = enemy_group
         self.player = player
 
         self.bull_image = pygame.image.load('assests/rougelike_shooter_pack/PNG/Weapons/Tiles/tile_0023.png')
@@ -110,14 +115,14 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         #update rect 
         self.rect.center = (self.x, self.y)
-        if self.rect.colliderect(self.enemy.rect):
-            self.player.score +=10
-            # move the collided enemy to the right of the screen
-            self.enemy.x = randint(WIDTH, WIDTH+200)
-            self.enemy.y = randint(0,HEIGHT)
-            self.enemy.rect.center = (self.enemy.x, self.enemy.y)
+        colliding_enemies = pygame.sprite.spritecollide(self, self.enemy_group, 0)
+        if colliding_enemies:
+            for enemy in colliding_enemies:
+                self.player.score += 10
+                enemy.x = randint(WIDTH, WIDTH+100)
+                enemy.y = randint(0,HEIGHT)
+                enemy.rect.center = (enemy.x, enemy.y)
             self.kill()
-    
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 

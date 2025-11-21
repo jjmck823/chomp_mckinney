@@ -31,19 +31,24 @@ title = Zombie_Text()
 
 game_over = False
 
+score_thres = 50 #when reaches 50 
+enemy_increase = 5 
 
-
-while running:
+while running: 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        #player event and update
+        #player event and update 
         if not game_over:
             player.check_event(event) 
     #update things
     if not game_over:
         enemy_group.update(player)
-  
+        if player.score >= score_thres:
+            for x in range(enemy_increase):
+                enemy_group.add(Enemy(randint(WIDTH, WIDTH + 200), randint(0, HEIGHT)))
+            score_thres += 50
+            enemy_increase += 1
     # flip() the display to put your work on screen
         screen.blit(background, (0,0))
         player.draw(screen)
