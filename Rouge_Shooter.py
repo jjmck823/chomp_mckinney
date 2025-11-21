@@ -19,17 +19,17 @@ background = make_background()
 
 
 #make enemies 
-enemy_list = []
+enemy_group = pygame.sprite.Group()
 for i in range(20):
     # make a new enemy and append
-    enemy_list.append(Enemy(randint(WIDTH,WIDTH+200), randint(0,HEIGHT)))
+    enemy_group.add(Enemy(randint(WIDTH,WIDTH+200), randint(0,HEIGHT)))
 
-player = Player(enemy_list)
+player = Player(enemy_group)
 
 #make title 
 title = Zombie_Text()
 
-
+game_over = False
 
 
 
@@ -38,24 +38,32 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         #player event and update
-        player.check_event(event) 
+        if not game_over:
+            player.check_event(event) 
     #update things
-    player.update()
-    for f in enemy_list:
-        f.update()
+    if not game_over:
+        enemy_group.update(player)
   
-
-
     # flip() the display to put your work on screen
-    screen.blit(background, (0,0))
-    player.draw(screen)
-    for f in enemy_list:
-        f.draw(screen)
-
+        screen.blit(background, (0,0))
+        player.draw(screen)
+        enemy_group.draw(screen)
+        player.update()
     #draw title and score 
-    title.update()
-    title.update_score(player.score, screen)
-    title.draw(screen)
+        title.update()
+        title.update_score(player.score, screen)
+        title.draw(screen)
+
+        if not player.live:
+            game_over= True
+    else: 
+        #game over screen
+        screen.fill((255,255,255))
+        screen.blit(player.game_over, player.game_over_rect)
+        font = player.score_font
+        score_text = font.render(f"Your Score: {player.score}", True, (0, 0, 0))
+        score_rect = score_text.get_rect(center=(WIDTH // 2, HEIGHT - 200))
+        screen.blit(score_text, score_rect)
 
     pygame.display.flip()
 

@@ -22,8 +22,8 @@ class Zombie_Text():
 
     def update_score(self, score, screen):
         self.score_surface = self.score_font.render(f"{score}",1,self.black)
-        if score == 0:
-            screen.blit(self.game_over, self.game_over_rect)   
+        #if score == 0:
+         #   screen.blit(self.game_over, self.game_over_rect)   
 
 
 

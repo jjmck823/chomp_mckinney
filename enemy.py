@@ -1,9 +1,11 @@
 from game_params import *
 import pygame
 from random import choice, randint
+import math
 
-class Enemy():
+class Enemy(pygame.sprite.Sprite):
     def __init__(self,x=WIDTH+100,y=HEIGHT//2):
+        super().__init__()
         self.assets = [
             'assests/rougelike_shooter_pack/PNG/Enemies/Tiles/tile_0000.png',
             'assests/rougelike_shooter_pack/PNG/Enemies/Tiles/tile_0004.png',
@@ -12,18 +14,29 @@ class Enemy():
         ]
         self.fp = choice(self.assets)
         self.image = pygame.image.load(self.fp)
-         # flip 
         self.image = pygame.transform.flip(self.image,1,0)
         self.rect = self.image.get_rect()
+
         self.x = x
         self.y = y
         # place the center of the rect
-        self.rect.center = (x,y)
-        self.vx = -2 # x velo enemy
+        self.rect.center = (self.x,self.y)
 
-    def update(self):
+        self.speed = 2 # speed
+
+    def update(self, player):
         # move the enemy 
-        self.x += self.vx
+        dx = player.x - self.x
+        dy = player.y - self.y
+        distance = math.hypot(dx, dy) #found hypotenuse func
+        
+        if distance != 0:
+            dx /= distance
+            dy /= distance 
+        
+        self.x += dx * self.speed
+        self.y += dy * self.speed
+       
         # update the rect
         self.rect.center = (self.x, self.y)
     
