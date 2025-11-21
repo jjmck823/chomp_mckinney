@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.live = True
         self.vx = 0
         self.vy = 0
-        self.accel = 0.1
+        self.accel = 0.5
         self.black = (0,0,0)
         self.score=0
         self.enemy_group = enemy_group
@@ -41,6 +41,12 @@ class Player(pygame.sprite.Sprite):
             self.vy += self.accel
         self.x += self.vx
         self.y += self.vy
+        self.x = max(self.rect.width //2, min(WIDTH - self.rect.width //2, self.x))
+        self.y = max(self.rect.height //2, min(HEIGHT - self.rect.height //2, self.y))
+        frict = 0.9
+        self.vx *= frict
+        self.vy *= frict 
+
         self.rect.center = (self.x, self.y)
         self.bullet_group.update()
 
