@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from game_params import *
 import math
+from bullet import Bullet
 
 
 # ===========================================================
@@ -152,76 +153,3 @@ class Player(pygame.sprite.Sprite):
         # bullets have custom draw (rotated or special)
         for bullet in self.bullet_group:
             bullet.draw(screen)
-
-
-# ===========================================================
-#                           BULLET
-# ===========================================================
-
-class Bullet(pygame.sprite.Sprite):
-    """
-    Represents a bullet that shoots toward the closest enemy
-    and damages any enemy it hits.
-    """
-
-    def __init__(self, coords, enemy, player, enemy_group):
-        super().__init__()
-
-        self.x, self.y = coords
-        self.speed = 5
-
-        self.enemy = enemy
-        self.player = player
-        self.enemy_group = enemy_group
-
-        # Load bullet asset
-        self.image = pygame.image.load(
-            "assests/rougelike_shooter_pack/PNG/Weapons/Tiles/tile_0023.png"
-        )
-        self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
-        self.rect = self.image.get_rect(center=coords)
-
-        # Calculate velocity toward target enemy
-        dx = enemy.x - self.x
-        dy = enemy.y - self.y
-        distance = max(1, math.hypot(dx, dy))  # avoid division by zero
-
-        self.vx = dx / distance * self.speed
-        self.vy = dy / distance * self.speed
-
-    # ----------------------------------------------------
-    #                        UPDATE
-    # ----------------------------------------------------
-    def update(self):
-        """Moves the bullet and checks for collisions with any enemy."""
-        self.x += self.vx
-        self.y += self.vy
-        self.rect.center = (self.x, self.y)
-
-        # Off-screen removal
-        if not (0 <= self.x <= WIDTH):
-            self.kill()
-            return
-
-        # Collide with ANY enemy
-        hit_enemies = pygame.sprite.spritecollide(self, self.enemy_group, False)
-
-        if hit_enemies:
-            for enemy in hit_enemies:
-                self._handle_enemy_hit(enemy)
-            self.kill()
-
-    def _handle_enemy_hit(self, enemy):
-        """Handles scoring and teleporting enemy after hit."""
-        self.player.score += 10
-
-        # Reposition enemy
-        enemy.x = randint(WIDTH, WIDTH + 100)
-        enemy.y = randint(0, HEIGHT)
-        enemy.rect.center = (enemy.x, enemy.y)
-
-    # ----------------------------------------------------
-    #                         DRAW
-    # ----------------------------------------------------
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
