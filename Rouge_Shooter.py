@@ -17,7 +17,17 @@ running = True
 #make a background 
 background = make_background()
 
-
+#make reset function 
+def reset_game():
+    global player, enemy_group, game_over, score_thres, enemy_increase
+    #resets all assests
+    enemy_group = pygame.sprite.Group()
+    for i in range(20):
+        enemy_group.add(Enemy(randint(WIDTH,WIDTH+200), randint(0,HEIGHT)))
+    player = Player(enemy_group)
+    score_thres = 50 #when reaches 50 
+    enemy_increase = 5 
+    game_over = False
 #make enemies 
 enemy_group = pygame.sprite.Group()
 for i in range(20):
@@ -41,6 +51,9 @@ while running:
         #player event and update 
         if not game_over:
             player.check_event(event) 
+        else: 
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                reset_game()
     #update things
     if not game_over:
         enemy_group.update(player)
@@ -69,6 +82,9 @@ while running:
         score_text = font.render(f"Your Score: {player.score}", True, (0, 0, 0))
         score_rect = score_text.get_rect(center=(WIDTH // 2, HEIGHT - 200))
         screen.blit(score_text, score_rect)
+        restart = font.render('Press R to Restart', 1, (0,0,0))
+        restart_rect = restart.get_rect(center=(WIDTH//2, HEIGHT - 100))
+        screen.blit(restart, restart_rect)
 
     pygame.display.flip()
 
