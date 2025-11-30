@@ -3,11 +3,13 @@ import math
 from random import randint
 from game_params import *
 
-
+# ===========================================================
+#                         BULLET CLASS
+# ===========================================================
 class Bullet(pygame.sprite.Sprite):
     """
     Bullet fired by the player that homes toward the selected enemy.
-    Hits ANY enemy it touches (not just the target).
+    Hits ANY enemy it touches (not just the targeted enemy).
     """
 
     def __init__(self, start_pos, target_enemy, player, enemy_group):

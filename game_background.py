@@ -1,52 +1,65 @@
 import pygame
-from random import randint 
+from random import randint
 from game_params import *
+
+
+# ---------------------------------------------
+#   LOAD ALL BACKGROUND ASSETS ONCE
+# ---------------------------------------------
+def load_background_assets():
+    """Load and return all tile images for the background."""
+
+    assets = {
+        "grass": pygame.image.load(
+            'assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0024.png'
+        ),
+
+        "shrubs": pygame.transform.rotozoom(
+            pygame.image.load('assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0044.png'),
+            0, 1
+        ),
+
+        "shrub_single": pygame.transform.rotozoom(
+            pygame.image.load('assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0062.png'),
+            0, 1
+        ),
+    }
+
+    return assets
+
+
+# ---------------------------------------------
+#   GENERATE BACKGROUND SURFACE
+# ---------------------------------------------
 def make_background():
-    #make a tiled background 
-    grass_tile_loc = 'assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0024.png'
-    grass_tile = pygame.image.load(grass_tile_loc)
+    """Builds and returns the full background surface."""
 
-    shrubs_loc = "assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0044.png"
-    shrubs = pygame.transform.rotozoom(pygame.image.load(shrubs_loc), 0, 1)
+    assets = load_background_assets()
+    grass_tile = assets["grass"]
+    shrubs = assets["shrubs"]
+    shrub_single = assets["shrub_single"]
 
-    shrubs_single_loc = "assests/rougelike_shooter_pack/PNG/Tiles/Tiles/tile_0062.png"
-    shrub_single = pygame.transform.rotozoom(pygame.image.load(shrubs_single_loc), 0, 1)
+    tile_w, tile_h = grass_tile.get_width(), grass_tile.get_height()
 
-    #get tile width and height 
-    tile_width = grass_tile.get_width()
-    tile_height = grass_tile.get_height()
-    #make a new surface - background with the same width as screen
+    # Create full-screen background surface
     background = pygame.Surface((WIDTH, HEIGHT))
 
-    #loop over background and place tiles 
-    for x in range(0,WIDTH,tile_width):
-        background.blit(grass_tile, (x,0))
-        for y in range(0,HEIGHT,tile_height):
-            background.blit(grass_tile, (x,y))
+    # -----------------------------------------
+    #  TILE THE GRASS (fixed tiling loop)
+    # -----------------------------------------
+    for x in range(0, WIDTH, tile_w):
+        for y in range(0, HEIGHT, tile_h):
+            background.blit(grass_tile, (x, y))
 
+    # -----------------------------------------
+    #  PLACE RANDOM SHRUBS
+    # -----------------------------------------
+    for _ in range(20):  # shrubs
+        x, y = randint(0, WIDTH), randint(0, HEIGHT)
+        background.blit(shrubs, (x, y))
 
-
-    #place random shrubs\
-
-    num_shrubs = 20    
-    for i in range(num_shrubs):
-        x = randint(0,WIDTH)
-        y = randint(0,HEIGHT)
-        # blit that seaweed
-        background.blit(shrubs,(x,y))
-    #blit single shrubs 
-
-    num_shrubs_single = 15    
-    for i in range(num_shrubs_single):
-        x = randint(0,WIDTH)
-        y = randint(0,HEIGHT)
-        # blit that seaweed
-        background.blit(shrub_single,(x,y))
-
+    for _ in range(15):  # small shrubs
+        x, y = randint(0, WIDTH), randint(0, HEIGHT)
+        background.blit(shrub_single, (x, y))
 
     return background
-
-
- 
-    
-

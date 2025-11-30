@@ -1,68 +1,79 @@
 import pygame
-from random import randint
+from random import randint, choice
 from game_params import *
 from game_background import make_background
 from player import Player
-from text import Zombie_Text
+from text import ZombieText
 from enemy import Enemy
-#------------------------------
-#  INIT
-#------------------------------
 
+# ------------------------------
+# INITIALIZATION
+# ------------------------------
 pygame.init()
-
-# Window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
+running = True
 
 # ------------------------------
 # HELPER FUNCTIONS
 # ------------------------------
 
+def spawn_enemy_edge():
+    """
+    Spawn an enemy from a random edge: right, top, or bottom.
+    Returns an Enemy object.
+    """
+    edge = choice(["right", "top", "bottom"])
+    if edge == "right":
+        x = WIDTH + 50
+        y = randint(0, HEIGHT)
+    elif edge == "top":
+        x = randint(0, WIDTH)
+        y = -50
+    else:  # bottom
+        x = randint(0, WIDTH)
+        y = HEIGHT + 50
+    return Enemy(x, y)
+
 def create_enemies(amount):
-    """Create a new enemy group with a set number of enemies."""
+    """
+    Create a sprite group of enemies spawning from random edges.
+    """
     group = pygame.sprite.Group()
     for _ in range(amount):
-        x = randint(WIDTH, WIDTH + 200)
-        y = randint(0, HEIGHT)
-        group.add(Enemy(x, y))
+        group.add(spawn_enemy_edge())
     return group
 
-
 def reset_game():
-    """Fully resets the game state."""
+    """
+    Resets all game state including player, enemies, score thresholds, etc.
+    """
     global player, enemy_group, game_over, score_threshold, enemies_to_add
 
     enemy_group = create_enemies(20)
     player = Player(enemy_group)
 
-    score_threshold = 50      # Score required for next difficulty increase
-    enemies_to_add = 5        # Number of new enemies added each step
+    score_threshold = 50
+    enemies_to_add = 5
     game_over = False
-
 
 # ------------------------------
 # INITIAL GAME SETUP
 # ------------------------------
-
 background = make_background()
-title = Zombie_Text()
+title = ZombieText()
 
 enemy_group = create_enemies(20)
 player = Player(enemy_group)
 
-# Difficulty settings
+# Difficulty scaling
 score_threshold = 50
 enemies_to_add = 5
-
 game_over = False
-running = True
-
 
 # ------------------------------
 # GAME LOOP
 # ------------------------------
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -70,31 +81,25 @@ while running:
 
         if not game_over:
             player.check_event(event)
-
         else:
-            # Press R to restart after death
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                 reset_game()
 
     # --------------------------
-    # UPDATE GAME
+    # GAME UPDATE
     # --------------------------
     if not game_over:
-
-        # Update enemies and player
         enemy_group.update(player)
         player.update()
 
-        # Difficulty scaling
+        # Difficulty scaling based on score
         if player.score >= score_threshold:
-            # Add new enemies
             for _ in range(enemies_to_add):
-                enemy_group.add(Enemy(randint(WIDTH, WIDTH + 200), randint(0, HEIGHT)))
+                enemy_group.add(spawn_enemy_edge())
+            score_threshold += 50
+            enemies_to_add += 1
 
-            score_threshold += 50        # Next target
-            enemies_to_add += 1          # Increase difficulty slowly
-
-        # Death check
+        # Check player death
         if not player.live:
             game_over = True
 
@@ -106,27 +111,14 @@ while running:
         enemy_group.draw(screen)
 
         title.update()
-        title.update_score(player.score, screen)
+        title.update_score(player.score)
         title.draw(screen)
 
     else:
         # --------------------------
         # GAME OVER SCREEN
         # --------------------------
-        screen.fill((255, 255, 255))
-
-        # Headline text
-        screen.blit(player.game_over, player.game_over_rect)
-
-        font = player.score_font
-        # Score Text
-        score_text = font.render(f"Your Score: {player.score}", True, (0, 0, 0))
-        score_rect = score_text.get_rect(center=(WIDTH // 2, HEIGHT - 200))
-        screen.blit(score_text, score_rect)
-        # Reset Text  
-        restart_text = font.render("Press R to Restart", True, (0, 0, 0))
-        restart_rect = restart_text.get_rect(center=(WIDTH // 2, HEIGHT - 100))
-        screen.blit(restart_text, restart_rect)
+        title.draw_game_over(screen, player.score)
 
     # --------------------------
     # DISPLAY UPDATE

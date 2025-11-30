@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
     Handles player movement, shooting, and collision.
     """
 
-    def __init__(self, enemy_group, x=WIDTH // 2, y=HEIGHT // 2):
+    def __init__(self, enemy_group, x=WIDTH * 0.2, y=HEIGHT // 2):
         super().__init__()
 
         # -----------------------------
@@ -76,8 +76,8 @@ class Player(pygame.sprite.Sprite):
     # ----------------------------------------------------
     def update(self):
         """Updates player movement, boundaries, bullets, and collision."""
-        self._handle_movement()
-        self._apply_boundaries()
+        self.movement()
+        self.apply_boundaries()
 
         # Update position
         self.x += self.vx
@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
             self.live = False
             self.death_sound.play()
 
-    def _handle_movement(self):
+    def movement(self):
         """Processes input (WASD) and applies acceleration & friction."""
         keys = pygame.key.get_pressed()
 
@@ -109,7 +109,7 @@ class Player(pygame.sprite.Sprite):
         self.vx *= self.friction
         self.vy *= self.friction
 
-    def _apply_boundaries(self):
+    def apply_boundaries(self):
         """Prevents the player from leaving the screen."""
         half_w = self.rect.width // 2
         half_h = self.rect.height // 2
